@@ -1,3 +1,5 @@
+# Developer name :A.Anbuselvam
+# Reg no : 212222240009
 # Ex.No: 07                                       AUTO REGRESSIVE MODEL
 ### Date: 
 
@@ -88,20 +90,24 @@ plt.show()
 ![Untitled-1](https://github.com/user-attachments/assets/2ee7ecac-ab33-405d-97af-eb60acb3c339)
 
 # AR Model Predictions for next 5 students:
+```
  10    75.561912
 11    81.415614
 12    78.162836
 13    79.863026
 14    78.954766
 dtype: float64
+```
 ![Untitled](https://github.com/user-attachments/assets/d52b436b-153d-4c20-91df-1c5b1839c4d1)
 # Exponential Smoothing Predictions for next 5 students:
+```
  10    77.933743
 11    77.521729
 12    77.109715
 13    76.697701
 14    76.285687
 dtype: float64
+```
 ![Untitled](https://github.com/user-attachments/assets/2688aaa5-45d5-4910-8442-2aa40167e69b)
 
 
