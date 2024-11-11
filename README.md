@@ -20,96 +20,87 @@ To Implementat an Auto Regressive Model using Python
 
 ### PROGRAM
 ```
+# Import necessary libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.ar_model import AutoReg
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from sklearn.model_selection import train_test_split
 
-# Create the student performance dataset
-df = pd.read_csv('/content/student_performance.csv')
+df = pd.read_csv('/content/student_performance(1).csv')
 
-# Convert to DataFrame
-df = pd.DataFrame(data)
 
-# Treat StudentID as the time index for simplicity
-df.set_index('StudentID', inplace=True)
 
-# Plot the data
-plt.plot(df.index, df['FinalGrade'], marker='o')
-plt.title('Final Grades Over Student IDs')
-plt.xlabel('Student ID')
-plt.ylabel('Final Grade')
-plt.grid(True)
-plt.show()
+# Prepare the data for modeling (Use 'FinalGrade' as the target variable)
+target = 'FinalGrade'
 
-# ---------------------------
-# Auto-Regressive (AR) Model
-# ---------------------------
-# Fit AR model (p=2, using 2 lag values for prediction)
-ar_model = AutoReg(df['FinalGrade'], lags=2).fit()
+# Step 1: Split data into training and testing sets
+X = df.drop(columns=[target, "StudentID", "Name", "Gender"])  # Drop non-numeric columns
+y = df[target]
 
-# Predict the next 5 final grades using the AR model
-ar_predictions = ar_model.predict(start=len(df), end=len(df) + 4)
+# Since we only have 10 data points, let's use 80% training data and 20% testing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
 
-print("AR Model Predictions for next 5 students:\n", ar_predictions)
+# ---------------------------------------
+# Step 2: AutoRegressive Model (AR model)
+# ---------------------------------------
+# Train the AutoRegressive model
+model_ar = AutoReg(y_train, lags=2)  # We choose lag=2 for this example
+model_ar_fitted = model_ar.fit()
 
-# Plot AR results
-plt.plot(df.index, df['FinalGrade'], label='Original Final Grades', marker='o')
-plt.plot(range(len(df) + 1, len(df) + 6), ar_predictions, label='AR Forecasted Grades', marker='x')
-plt.title('Auto-Regressive Model Forecast')
-plt.xlabel('Student ID')
-plt.ylabel('Final Grade')
+# Make predictions
+y_pred_ar = model_ar_fitted.predict(start=len(y_train), end=len(y_train) + len(y_test) - 1)
+
+# Evaluate AR model (using RMSE)
+from sklearn.metrics import mean_squared_error
+import math
+
+rmse_ar = math.sqrt(mean_squared_error(y_test, y_pred_ar))
+print(f"RMSE for AutoRegressive model: {rmse_ar}")
+
+# Plot AR predictions vs actual
+plt.figure(figsize=(10, 5))
+plt.plot(y_test.index, y_test, label="Actual FinalGrade", color="blue")
+plt.plot(y_test.index, y_pred_ar, label="Predicted FinalGrade", color="red", linestyle="--")
+plt.title("AutoRegressive Model: FinalGrade Predictions")
+plt.xlabel("Student Index")
+plt.ylabel("FinalGrade")
 plt.legend()
-plt.grid(True)
 plt.show()
 
-# ---------------------------
-# Exponential Smoothing (ES)
-# ---------------------------
-# Apply Holt-Winters Exponential Smoothing (Additive trend, no seasonality)
-es_model = ExponentialSmoothing(df['FinalGrade'], trend='add', seasonal=None).fit()
+# ---------------------------------------
+# Step 3: Exponential Smoothing (ETS)
+# ---------------------------------------
+# Applying Holt-Winters Exponential Smoothing Model
+model_es = ExponentialSmoothing(y_train, trend='add', seasonal=None, seasonal_periods=None)
+model_es_fitted = model_es.fit()
 
-# Predict the next 5 final grades using the ES model
-es_predictions = es_model.forecast(steps=5)
+# Make predictions
+y_pred_es = model_es_fitted.predict(start=len(y_train), end=len(y_train) + len(y_test) - 1)
 
-print("Exponential Smoothing Predictions for next 5 students:\n", es_predictions)
+# Evaluate Exponential Smoothing model (using RMSE)
+rmse_es = math.sqrt(mean_squared_error(y_test, y_pred_es))
+print(f"RMSE for Exponential Smoothing model: {rmse_es}")
 
-# Plot ES results
-plt.plot(df.index, df['FinalGrade'], label='Original Final Grades', marker='o')
-plt.plot(df.index, es_model.fittedvalues, label='ES Fitted Values', linestyle='--')
-plt.plot(range(len(df) + 1, len(df) + 6), es_predictions, label='ES Forecasted Grades', marker='x')
-plt.title('Exponential Smoothing Forecast')
-plt.xlabel('Student ID')
-plt.ylabel('Final Grade')
+# Plot Exponential Smoothing predictions vs actual
+plt.figure(figsize=(10, 5))
+plt.plot(y_test.index, y_test, label="Actual FinalGrade", color="blue")
+plt.plot(y_test.index, y_pred_es, label="Predicted FinalGrade", color="green", linestyle="--")
+plt.title("Exponential Smoothing Model: FinalGrade Predictions")
+plt.xlabel("Student Index")
+plt.ylabel("FinalGrade")
 plt.legend()
-plt.grid(True)
 plt.show()
+
+
 ```
 ### OUTPUT:
-![Untitled-1](https://github.com/user-attachments/assets/2ee7ecac-ab33-405d-97af-eb60acb3c339)
+RMSE for AutoRegressive model: 11.05098267829926
+![Untitled](https://github.com/user-attachments/assets/4260702f-7e60-4e1a-b277-43476a183aef)
 
-# AR Model Predictions for next 5 students:
-```
- 10    75.561912
-11    81.415614
-12    78.162836
-13    79.863026
-14    78.954766
-dtype: float64
-```
-![Untitled](https://github.com/user-attachments/assets/d52b436b-153d-4c20-91df-1c5b1839c4d1)
-# Exponential Smoothing Predictions for next 5 students:
-```
- 10    77.933743
-11    77.521729
-12    77.109715
-13    76.697701
-14    76.285687
-dtype: float64
-```
-![Untitled](https://github.com/user-attachments/assets/2688aaa5-45d5-4910-8442-2aa40167e69b)
-
+RMSE for Exponential Smoothing model: 9.602243537611528
+![Untitled-1](https://github.com/user-attachments/assets/f27222c1-ba91-4478-87d9-dfa117f92890)
 
 
 
