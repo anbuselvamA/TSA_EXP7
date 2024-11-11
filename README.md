@@ -10,13 +10,12 @@ To Implementat an Auto Regressive Model using Python
 ### ALGORITHM:
 1. Import necessary libraries
 2. Read the student performance dataset, convert it to a DataFrame, and set the StudentID as the index to treat it as the time series variable.
-3. Visualize the FinalGrade over the student IDs to see the time series trend.
-4.Fit an AR model using the past 2 lags (p=2), which means predicting each value based on the two previous grades.
-5. Use the trained AR model to predict the next 5 student grades)
-6. Plot the original grades and the predicted values from the AR model.Apply the Holt-Winters
-7. Exponential Smoothing method with an additive trend (no seasonality).
-8. Predict the next 5 student grades using the ES model.
-9. Plot the original grades, the fitted values, and the forecasted grades from the ES model.
+3. You will need libraries like: pandas for data manipulation statsmodels for AR model statsmodels.tsa.holtwinters for Exponential Smoothing
+4.The dataset is first split into training and testing sets. The non-numeric columns like StudentID, Name, and Gender are dropped since we're focusing on numeric features.
+5. We use the AutoReg model from statsmodels with a lag of 2 (you can experiment with the lag parameter). The AR model uses previous values of FinalGrade to predict future values
+6.  Predictions are then plotted alongside the actual values of FinalGrade for comparison.
+
+
 
 ### PROGRAM
 ```
