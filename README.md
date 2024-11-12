@@ -13,7 +13,7 @@ To Implementat an Auto Regressive Model using Python
 6.  Predictions are then plotted alongside the actual values of FinalGrade for comparison.
 ### PROGRAM
 ```
- # Import necessary libraries
+# Import necessary libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,9 +22,6 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from sklearn.model_selection import train_test_split
 
 df = pd.read_csv('/content/student_performance(1).csv')
-
-
-
 # Prepare the data for modeling (Use 'FinalGrade' as the target variable)
 target = 'FinalGrade'
 
@@ -61,7 +58,6 @@ plt.xlabel("Student Index")
 plt.ylabel("FinalGrade")
 plt.legend()
 plt.show()
-
 # ---------------------------------------
 # Step 3: Exponential Smoothing (ETS)
 # ---------------------------------------
@@ -85,14 +81,9 @@ plt.xlabel("Student Index")
 plt.ylabel("FinalGrade")
 plt.legend()
 plt.show()
-
-
 ```
 ### OUTPUT:
-RMSE for AutoRegressive model: 11.05098267829926
 ![Untitled](https://github.com/user-attachments/assets/4260702f-7e60-4e1a-b277-43476a183aef)
-
-RMSE for Exponential Smoothing model: 9.602243537611528
 ![Untitled-1](https://github.com/user-attachments/assets/f27222c1-ba91-4478-87d9-dfa117f92890)
 ### RESULT:
 Thus the have successfully implemented the auto regression function using python.
